@@ -26,8 +26,8 @@ public:
 static unsigned long long cache_D[100000];
 static unsigned long long cache_d[100000];
 static unsigned long long cache_p[100000];
-static unordered_map<unsigned long long, unsigned long long> cache_F;           //use       unordered_map to store the factorial, avg insert, lookup O(1)
-static unordered_map<pair<unsigned long long, unsigned long long>, unsigned long long> cache_P; //use unordered_map to store the pow
+static unordered_map<unsigned long long, unsigned long long> cache_F;           // lookup O(1)
+static unordered_map<pair<unsigned long long, unsigned long long>, unsigned long long> cache_P; //use unordered_map 
 
 unsigned long long fact_cache [21] = {
 
@@ -57,18 +57,14 @@ unsigned long long fact_cache [21] = {
 
 unsigned long long power(unsigned long long x, unsigned long long y)
 {
-    //timestamp_t t0 = get_timestamp();
     pair<unsigned long long, unsigned long long> curr(x, y);
     if(cache_P.find(curr) != cache_P.end())
     {
-        //timestamp_t t1 = get_timestamp();
-        //pow_sec += (t1 - t0) / 1000000.0L;
         return cache_P[curr];
     }
     unsigned long long result = 1;
     unsigned long long mod_x =  mod(x);
-    //unsigned long long count = 0;
-
+    
     while( y )
     {
         if ( y & 1 )
@@ -81,8 +77,7 @@ unsigned long long power(unsigned long long x, unsigned long long y)
         mod_x =  mod(temp);
     }
     cache_P[curr] = result;
-    //timestamp_t t1 = get_timestamp();
-    //pow_sec += (t1 - t0) / 1000000.0L;
+
     return result;
 }
 
@@ -91,17 +86,14 @@ unsigned long long factorial(unsigned long long x)
     if(x <= 20){
         return fact_cache[x];
     }
-    //timestamp_t t0 = get_timestamp();
     if (cache_F.find(x) != cache_F.end())
     {
-        //timestamp_t t1 = get_timestamp();
-        //fac_sec += (t1 - t0) / 1000000.0L;
         return cache_F[x];
     }
     else
     {
         unsigned long long result = 1;
-        //here we go from x to 1 since we could speed up operation as soon as we have x - 1 or x - 2 or x - 3 in our caching (just x * (x - 1)! )
+       
         for(unsigned long long i = x; i >= 1; i--)
         {
             if(cache_F.find(i) != cache_F.end())
@@ -109,8 +101,6 @@ unsigned long long factorial(unsigned long long x)
                 unsigned long long temp1 = result * cache_F[i];
                 result = mod(temp1);
                 cache_F[x] = result;
-                //timestamp_t t1 = get_timestamp();
-                //fac_sec += (t1 - t0) / 1000000.0L;
                 return result;
             }
             unsigned long long mod_i = mod(i);
@@ -118,8 +108,6 @@ unsigned long long factorial(unsigned long long x)
             result = mod(temp2);
         }
         cache_F[x] = result;
-        //timestamp_t t1 = get_timestamp();
-        //fac_sec += (t1 - t0) / 1000000.0L;
         return result;
     } 
 }
